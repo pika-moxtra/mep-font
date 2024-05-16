@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Prakash's Demo</title>
+</head>
+<script type="text/javascript" src="https://prakash-demo.moxtra.com/web/websdk/dist/mepsdk.js">
+</script>
+<style>
+  .center {
+  margin: auto;
+  width: auto;
+  height: auto;
+  padding: 10px 32px;
+}
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button1 {background-color: #4CAF50;} 
+.button2 {background-color: #123321;}
+</style>
+<body>
+  <div class = "center" id="choose" style="height: 50px; width:500px; margin: 20px; padding: 20px;">
+  <img src="https://assets-global.website-files.com/612ecbcc615e87b0b9b38524/62037243f5ede375a8705a34_Moxo-Website-Button.svg" >
+<button class="button button1" style= "margin: inherit;" onclick="setup(moxoDomain, accessToken)">Create relationship</button>
+<button class="button button2" style= "margin: inherit;" onclick="home()">Home</button>
+  <div id="box" style="height:600px; width: 900px"></div>
+  <div class="log-message"></div>
+
+  <script type="text/javascript">
+ 	var moxoDomain = 'https://prakash-demo.moxtra.com'
+    var accessToken = generateToken(moxoDomain)
+    
+    var timeOut = 5000;
+    setTimeout(function(){
+        console.log("acessToken = " + accessToken)
+    	console.log("Timeout Executed.!!!")
+    	setupMoxo(moxoDomain, accessToken)
+    }, timeOut)
+    
+
+
+function home(){
+document.getElementById('box').innerHTML='This is a different page';
+
+}
+
+function generateToken(moxoDomain){
+ var tokenURL = moxoDomain + "/v1/core/oauth/token";
+ var myHeaders = new Headers();
+ myHeaders.append("Content-Type", "application/json");
+ 
+ var raw = JSON.stringify({
+  // "client_id": "smhRUJLvBAd",
+  // "client_secret": "1qH5irl0NFY",
+  // "org_id": "PFLxMIguHnuLcFts6600Cx6",
+  // "email": "mayr1@yopmail.com"
+  
+  "org_id":"PsTjiXl7YbOIKLCZzxY9j7G",
+    "client_id": "NjYzNzM1MDV",
+    "client_secret": "MzYxNmU4ZmN",
+    "email": "bill.moxo@yopmail.com"
+    // "unique_id": "test201902@yopmail.com"
+
+    // "org_id": "PI6ndkhL5XxBWdmLwss1CxD",
+    // "client_id":"NjE3YTUxN2E",
+    // "client_secret":"ZTA4MGQyNTk",
+    // "email":"test201902@yopmail.com"
+
+
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+ 
+ //console.log(tokenURL)
+fetch(tokenURL, requestOptions)
+  .then(response => response.json())
+  .then(result => accessToken = result.access_token)
+  .catch(error => console.log('error', error));
+
+return accessToken;
+  
+}
+
+function setupMoxo(moxoDomain, accessToken){
+   mepsdk.setup({
+    baseDomain: moxoDomain, //replace with YOUR_MOXTRA_DOMAIN
+    deployDirectory:'web',
+    accessToken: accessToken
+
+});
+
+
+mepsdk.setConfig({
+disableDownload:true,
+disableChangeChatName:true,
+hideInactiveRelationChat:true,
+disableEmoji:false,
+disableUserPresence:true,
+hideChatNotificationsSetting:true,
+disableEditChatMessage:true,
+fontFileLink: ''
+})
+
+  // 
+var mepwin = mepsdk.showMEPClientDashboard('#box')
+// var mepwin = mepsdk.showChat('#box', "BmeBgd0vrBzCO5be56MGcyE", {
+//   hideChatHeader: false,
+//   initialTab: 'file' //files, actions
+// })
+mepwin.onNotification(function (data) {
+var isMeet = data.isMeet;
+if(isMeet){
+if (confirm("You have a call\n")) {
+	// On clicking okay, Navigate to Moxo iframe
+} else {
+  //else ignore it.
+}
+}
+      console.log('notification', data);
+    })
+//     
+//    //  var mepwin = mepsdk.showChat('#box', "BZsDZjAXwByKo66qhIaIQQA")
+// //     var lang = 'en'
+//     mepwin.onBinderClosed(function(mepChat) {
+//           console.log('Binder Dismissed', mepChat)
+//       })
+// //     
+//     mepwin.onUnreadCountChange(function (count) {
+//       console.log('unread count', count);
+//     })
+  
+// //   
+//     mepwin.onAddMember(function(data) {
+//           alert('add member to '+data)
+//         })
+//         
+//     mepwin.onChatMessageSent(function(data) {
+//     console.log(data);
+//     })   
+//     mepwin.onMeetEnd(function(meetId) {
+//     console.log('meeting is ended')
+// }) 
+//     
+//     mepwin.onTapTransactionButton(function(info) {
+//     console.log("Transaction Button Clicked...." + info)
+//     })
+    
+   //  mepwin.ready(()=>{
+//   mepsdk.changeLanguage(lang);
+// });
+
+}
+
+  </script>
+</body>
+
+</html>
